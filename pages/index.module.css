@@ -1,13 +1,13 @@
 .container {
   display: grid;
-  grid-template-columns: 700px calc(100vw - 717px);
+  grid-template-columns: auto;
   position: relative;
   box-sizing: border-box;
 }
 
 .containerDark {
   display: grid;
-  grid-template-columns: 700px calc(100vw - 717px);
+  grid-template-columns: auto;
   position: relative;
   box-sizing: border-box;
   background: #2b2e3c;
@@ -85,7 +85,7 @@
 }
 
 .helpingUnderline {
-  color: #00B812;
+  color: #5887E3;
 }
 
 .helpingParagraph {
@@ -97,7 +97,7 @@
 .addNetworkButton {
   margin-top: 50px !important;
   width: fit-content;
-  color: #00B812;
+  color: #5887E3;
 }
 
 .filterRow {
@@ -158,11 +158,11 @@
 
 @media screen and (max-width: 1500px) {
   .container {
-    grid-template-columns: 500px calc(100vw - 517px);
+    grid-template-columns: auto;
   }
 
   .containerDark {
-    grid-template-columns: 500px calc(100vw - 517px);
+    grid-template-columns: auto;
   }
 
   .headerContainer,

@@ -1,4 +1,4 @@
-This repo is forked from [original chainlist](https://github.com/antonnell/networklist-org) and maintained by OneKey.
+This repo is forked from [original chainlist](https://github.com/antonnell/networklist-org) and maintained by Bitpie.
 
 ## Getting Started
 

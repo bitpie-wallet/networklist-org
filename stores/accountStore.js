@@ -119,7 +119,7 @@ class Store {
     }
     // Non-dapp browsers...
     else {
-      console.log('Non-Ethereum browser detected. You should consider trying MetaMask or OneKey!');
+      console.log('Non-Ethereum browser detected. You should consider trying MetaMask or Bitpie!');
     }
   }
 }

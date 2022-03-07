@@ -79,7 +79,7 @@ export default function Chain({ chain }) {
     if(account && account.address) {
       const providerTextList = {
         Metamask: 'Add to Metamask',
-        OneKey: 'Add to OneKey',
+        Bitpie: 'Add to Bitpie',
         imToken: 'Add to imToken',
         Wallet: 'Add to Wallet'
       }

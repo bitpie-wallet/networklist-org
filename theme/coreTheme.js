@@ -1,7 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
 export const colors = {
-  blue: "#00B812",
+  blue: "#5887E3",
   red: '#ed4337',
   orange: '#ffb347',
   lightBlack: 'rgba(0, 0, 0, 0.87)'
