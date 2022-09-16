@@ -1,124 +1,151 @@
-import React, { useState, useEffect } from 'react';
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import styles from '../styles/Home.module.css'
-import { withTheme, createTheme, ThemeProvider } from '@material-ui/core/styles';
-import path from 'path'
+import React, { useState, useEffect } from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import styles from "../styles/Home.module.css";
+import {
+  withTheme,
+  createTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
+import path from "path";
 import {
   Grid,
   Typography,
   Button,
   TextField,
   InputAdornment,
-  Paper
-} from '@material-ui/core'
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
-import Chain from '../components/chain'
-import MultiChain from '../components/multichain'
-import Header from '../components/header'
+  Paper,
+} from "@material-ui/core";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
+import Chain from "../components/chain";
+import MultiChain from "../components/multichain";
+import Header from "../components/header";
 
-import SearchIcon from '@material-ui/icons/Search';
-import AppsIcon from '@material-ui/icons/Apps';
-import ListIcon from '@material-ui/icons/List';
-import AddIcon from '@material-ui/icons/Add';
-import useSWR from 'swr'
-import classes from './index.module.css'
+import SearchIcon from "@material-ui/icons/Search";
+import AppsIcon from "@material-ui/icons/Apps";
+import ListIcon from "@material-ui/icons/List";
+import AddIcon from "@material-ui/icons/Add";
+import useSWR from "swr";
+import classes from "./index.module.css";
 
 const searchTheme = createTheme({
   palette: {
-    type: 'light',
+    type: "light",
     primary: {
-      main: '#5887E3',
+      main: "#5887E3",
     },
   },
   shape: {
-    borderRadius: '10px'
+    borderRadius: "10px",
   },
   typography: {
     fontFamily: [
-      'Inter',
-      'Arial',
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "Inter",
+      "Arial",
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'sans-serif',
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
+    ].join(","),
     body1: {
-      fontSize: '12px'
-    }
+      fontSize: "12px",
+    },
   },
   overrides: {
     MuiPaper: {
       elevation1: {
-        "box-shadow": '0px 7px 7px #0000000A;',
-        "-webkit-box-shadow": '0px 7px 7px #0000000A;',
-        "-moz-box-shadow": '0px 7px 7px #0000000A;',
-      }
+        "box-shadow": "0px 7px 7px #0000000A;",
+        "-webkit-box-shadow": "0px 7px 7px #0000000A;",
+        "-moz-box-shadow": "0px 7px 7px #0000000A;",
+      },
     },
     MuiInputBase: {
       input: {
-        fontSize: '14px'
+        fontSize: "14px",
       },
     },
     MuiOutlinedInput: {
       input: {
-        padding: '12.5px 14px'
+        padding: "12.5px 14px",
       },
       notchedOutline: {
         borderColor: "#FFF",
-      }
+      },
     },
   },
 });
 
-const fetcher = (...args) => fetch(...args).then(res => res.json())
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function Home({ changeTheme, theme }) {
-  const { data, error } = useSWR('https://chainid.network/chains.json', fetcher)
+  const { data, error } = useSWR(
+    "https://chainid.network/chains.json",
+    fetcher
+  );
 
-  const [ layout, setLayout ] = useState('grid')
-  const [ search, setSearch ] = useState('')
-  const [ hideMultichain, setHideMultichain ] = useState('1')
-  const router = useRouter()
+  if (data != null && data.length > 0) {
+    if (data[data.length - 1].name != "ETHW-mainnet") {
+      data.push({
+        name: "ETHW-mainnet",
+        chain: "ETHW",
+        rpc: ["https://mainnet.ethereumpow.org"],
+        faucets: [],
+        nativeCurrency: {
+          name: "ETHW",
+          symbol: "ETHW",
+          decimals: 18,
+        },
+        infoURL: "https://mainnetethwscan.com/",
+        shortName: "ETHW",
+        chainId: 10001,
+        networkId: 10001,
+      });
+    }
+  }
+
+  const [layout, setLayout] = useState("grid");
+  const [search, setSearch] = useState("");
+  const [hideMultichain, setHideMultichain] = useState("1");
+  const router = useRouter();
   if (router.query.search) {
-    setSearch(router.query.search)
-    delete router.query.search
+    setSearch(router.query.search);
+    delete router.query.search;
   }
 
   const onSearchChanged = (event) => {
-    setSearch(event.target.value)
-  }
+    setSearch(event.target.value);
+  };
 
   const handleLayoutChanged = (event, newVal) => {
-    if(newVal !== null) {
-      setLayout(newVal)
-      localStorage.setItem('yearn.finance-invest-layout', newVal ? newVal : '')
+    if (newVal !== null) {
+      setLayout(newVal);
+      localStorage.setItem("yearn.finance-invest-layout", newVal ? newVal : "");
     }
-  }
+  };
 
   const addNetwork = () => {
-    window.open('https://github.com/ethereum-lists/chains', '_blank')
-  }
+    window.open("https://github.com/ethereum-lists/chains", "_blank");
+  };
 
   const closeMultichain = (perma) => {
-    setHideMultichain('1')
-    localStorage.setItem('chainlist.org-hideMultichain', perma ? '1' : '0')
-  }
+    setHideMultichain("1");
+    localStorage.setItem("chainlist.org-hideMultichain", perma ? "1" : "0");
+  };
 
   useEffect(() => {
-    const multi = localStorage.getItem('chainlist.org-hideMultichain')
-    if(multi) {
-      setHideMultichain(multi)
+    const multi = localStorage.getItem("chainlist.org-hideMultichain");
+    if (multi) {
+      setHideMultichain(multi);
     } else {
-      setHideMultichain('0')
+      setHideMultichain("0");
     }
-  }, [])
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -128,61 +155,100 @@ function Home({ changeTheme, theme }) {
       </Head>
 
       <main className={styles.main}>
-        <div className={ theme.palette.type === 'dark' ? classes.containerDark : classes.container }>
-          <div className={ theme.palette.type === 'dark' ? classes.listContainerDark : classes.listContainer }>
-            <div className={ theme.palette.type === 'dark' ? classes.headerContainerDark : classes.headerContainer }>
-              <div className={ classes.filterRow }>
+        <div
+          className={
+            theme.palette.type === "dark"
+              ? classes.containerDark
+              : classes.container
+          }
+        >
+          <div
+            className={
+              theme.palette.type === "dark"
+                ? classes.listContainerDark
+                : classes.listContainer
+            }
+          >
+            <div
+              className={
+                theme.palette.type === "dark"
+                  ? classes.headerContainerDark
+                  : classes.headerContainer
+              }
+            >
+              <div className={classes.filterRow}>
                 <ThemeProvider theme={searchTheme}>
-                  <Paper className={ classes.searchPaper }>
+                  <Paper className={classes.searchPaper}>
                     <TextField
                       fullWidth
-                      className={ classes.searchContainer }
+                      className={classes.searchContainer}
                       variant="outlined"
                       placeholder="ETH 和其他 EVM 网络..."
-                      value={ search }
-                      onChange={ onSearchChanged }
+                      value={search}
+                      onChange={onSearchChanged}
                       InputProps={{
-                        endAdornment: <InputAdornment position="end">
-                          <SearchIcon fontSize="small"  />
-                        </InputAdornment>,
-                        startAdornment: <InputAdornment position="start">
-                          <Typography className={ classes.searchInputAdnornment }>
-                            搜索 EVM 网络
-                          </Typography>
-                        </InputAdornment>
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <SearchIcon fontSize="small" />
+                          </InputAdornment>
+                        ),
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Typography
+                              className={classes.searchInputAdnornment}
+                            >
+                              搜索 EVM 网络
+                            </Typography>
+                          </InputAdornment>
+                        ),
                       }}
                     />
                   </Paper>
                 </ThemeProvider>
               </div>
-              <Header changeTheme={ changeTheme } />
+              <Header changeTheme={changeTheme} />
             </div>
-            <div className={ classes.cardsContainer }>
+            <div className={classes.cardsContainer}>
               {/* { hideMultichain === '0' && <MultiChain closeMultichain={ closeMultichain } /> } */}
-              {
-                data && data.filter((chain) => {
-                  if(search === '') {
-                    return true
-                  } else {
-                    //filter
-                    return (chain.chain.toLowerCase().includes(search.toLowerCase()) ||
-                    chain.chainId.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    chain.name.toLowerCase().includes(search.toLowerCase()) ||
-                    (chain.nativeCurrency ? chain.nativeCurrency.symbol : '').toLowerCase().includes(search.toLowerCase()))
-                  }
-                }).map((chain, idx) => {
-                  return <Chain chain={ chain } key={ idx } />
-                })
-              }
+              {data &&
+                data
+                  .filter((chain) => {
+                    if (search === "") {
+                      return true;
+                    } else {
+                      //filter
+                      return (
+                        chain.chain
+                          .toLowerCase()
+                          .includes(search.toLowerCase()) ||
+                        chain.chainId
+                          .toString()
+                          .toLowerCase()
+                          .includes(search.toLowerCase()) ||
+                        chain.name
+                          .toLowerCase()
+                          .includes(search.toLowerCase()) ||
+                        (chain.nativeCurrency
+                          ? chain.nativeCurrency.symbol
+                          : ""
+                        )
+                          .toLowerCase()
+                          .includes(search.toLowerCase())
+                      );
+                    }
+                  })
+                  .map((chain, idx) => {
+                    return <Chain chain={chain} key={idx} />;
+                  })}
             </div>
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-export default withTheme(Home)
+export default withTheme(Home);
 
 // export const getStaticProps  = async () => {
 //
